@@ -9,22 +9,34 @@ import java.io.IOException;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.Drive;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.commands.BackIntake;
+import frc.robot.commands.FrontIntake;
+import frc.robot.subsystems.BackIntakeSubsystem;
+//import frc.robot.commands.Drive;
+//import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.FrontIntakeSubsystem;
+
 
 public class RobotContainer {
-  private final DrivetrainSubsystem myDriveTrainSubsystem;
+  //private final DrivetrainSubsystem myDriveTrainSubsystem;
   private final CommandXboxController controller;
+  private final FrontIntakeSubsystem myFrontIntakeSubsystem;
+  private final BackIntakeSubsystem myBackIntakeSubsystem;
 
   public RobotContainer() throws IOException {
-    myDriveTrainSubsystem = new DrivetrainSubsystem();
-    configureBindings();
+    //myDriveTrainSubsystem = new DrivetrainSubsystem();
+    myFrontIntakeSubsystem = new FrontIntakeSubsystem();
+    myBackIntakeSubsystem = new BackIntakeSubsystem();
     controller = new CommandXboxController(0);
-    myDriveTrainSubsystem.setDefaultCommand(new Drive(myDriveTrainSubsystem, () -> -controller.getLeftY()*4, () -> -controller.getLeftX()*4, () -> -controller.getRightX()*2*Math.PI));
+    configureBindings();
+   // myDriveTrainSubsystem.setDefaultCommand(new Drive(myDriveTrainSubsystem, () -> -controller.getLeftY()*4, () -> -controller.getLeftX()*4, () -> -controller.getRightX()*2*Math.PI));
     
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    controller.a().whileTrue(new FrontIntake(myFrontIntakeSubsystem));
+    controller.b().whileTrue(new BackIntake(myBackIntakeSubsystem));
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
