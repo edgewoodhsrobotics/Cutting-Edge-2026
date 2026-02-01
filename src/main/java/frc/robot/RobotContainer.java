@@ -41,7 +41,6 @@ public class RobotContainer {
     controller.b().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new FrontIntake(myFrontIntakeSubsystem, 1))); //outtake
     controller.y().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new FrontIntake(myFrontIntakeSubsystem, 0))); //unstick
 
-
   }
 
   public Command getAutonomousCommand() {

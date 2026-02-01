@@ -7,7 +7,7 @@ public class FrontIntake extends Command {
     private FrontIntakeSubsystem myFrontIntakeSubsystem;
     private double mySpeed;
     
-    public FrontIntake(FrontIntakeSubsystem frontIntakeSubsystem, int speed){
+    public FrontIntake(FrontIntakeSubsystem frontIntakeSubsystem, double speed){
         myFrontIntakeSubsystem = frontIntakeSubsystem;
         mySpeed = speed;
         addRequirements(myFrontIntakeSubsystem);
