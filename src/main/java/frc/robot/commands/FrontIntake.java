@@ -5,9 +5,11 @@ import frc.robot.subsystems.FrontIntakeSubsystem;
 
 public class FrontIntake extends Command {
     private FrontIntakeSubsystem myFrontIntakeSubsystem;
+    private double mySpeed;
     
-    public FrontIntake(FrontIntakeSubsystem frontIntakeSubsystem){
+    public FrontIntake(FrontIntakeSubsystem frontIntakeSubsystem, int speed){
         myFrontIntakeSubsystem = frontIntakeSubsystem;
+        mySpeed = speed;
         addRequirements(myFrontIntakeSubsystem);
     }
 
@@ -16,7 +18,7 @@ public class FrontIntake extends Command {
     }
 
     public void execute(){
-        myFrontIntakeSubsystem.FrontIntake(1);
+        myFrontIntakeSubsystem.FrontIntake(mySpeed);
     }
 
     public void end(boolean isInterrupted){

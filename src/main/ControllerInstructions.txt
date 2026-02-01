@@ -1,0 +1,5 @@
+Controller Instructions:
+x = shooter
+a = send ball out front
+y = unstick from hopper
+b = intake

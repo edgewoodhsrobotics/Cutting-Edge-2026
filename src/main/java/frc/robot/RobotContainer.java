@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.BackIntake;
 import frc.robot.commands.FrontIntake;
@@ -34,8 +36,12 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    controller.a().whileTrue(new FrontIntake(myFrontIntakeSubsystem));
-    controller.b().whileTrue(new BackIntake(myBackIntakeSubsystem));
+    controller.x().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 1), new FrontIntake(myFrontIntakeSubsystem, 1))); //shooter
+    controller.a().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 1), new FrontIntake(myFrontIntakeSubsystem, -1))); //outtake
+    controller.b().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new FrontIntake(myFrontIntakeSubsystem, 1))); //outtake
+    controller.y().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new FrontIntake(myFrontIntakeSubsystem, 0))); //unstick
+
+
   }
 
   public Command getAutonomousCommand() {
