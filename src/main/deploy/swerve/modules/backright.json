@@ -11,7 +11,7 @@
   },
   "angle": {
     "type": "nova_neo550",
-    "id": 0,
+    "id": 9,
     "canbus": null
   },
   "encoder": {
