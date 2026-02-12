@@ -6,15 +6,20 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class BackIntakeSubsystem extends SubsystemBase{
-    private SparkMax backIntakeMotor;
+    private SparkMax backIntakeMotorPush;
+    private SparkMax backIntakeMotorWheel;
+
 
     public BackIntakeSubsystem(){
-        backIntakeMotor = new SparkMax(11, MotorType.kBrushed);
+        backIntakeMotorPush = new SparkMax(11, MotorType.kBrushless);
+        backIntakeMotorWheel = new SparkMax(14, MotorType.kBrushless);
     }
 
 
 
     public void BackIntake(double speed){
-        backIntakeMotor.set(speed);
+        backIntakeMotorPush.set(speed);
+        backIntakeMotorWheel.set(2*speed);
+
     }
 }
