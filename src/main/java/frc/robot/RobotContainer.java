@@ -42,10 +42,10 @@ public class RobotContainer {
     controller.a().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, .1), new FrontIntake(myFrontIntakeSubsystem, -1))); 
    
    //intake
-    controller.b().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -.1), new FrontIntake(myFrontIntakeSubsystem, 1))); 
+    controller.b().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.3), new FrontIntake(myFrontIntakeSubsystem, 1))); 
 
    //unstick from hopper
-    controller.y().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -.1), new FrontIntake(myFrontIntakeSubsystem, 0))); //unstick
+    controller.y().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -.1), new FrontIntake(myFrontIntakeSubsystem, 0)));
   }
 
   public Command getAutonomousCommand() {
