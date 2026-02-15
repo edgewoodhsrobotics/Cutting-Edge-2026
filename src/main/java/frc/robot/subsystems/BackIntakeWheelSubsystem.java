@@ -9,7 +9,7 @@ public class BackIntakeWheelSubsystem extends SubsystemBase{
     private SparkMax backIntakeMotorWheel;
 
     public BackIntakeWheelSubsystem(){
-        backIntakeMotorWheel = new SparkMax(14, MotorType.kBrushless);
+        backIntakeMotorWheel = new SparkMax(26, MotorType.kBrushless);
     }
 
     public void BackIntakeWheel(double speed){

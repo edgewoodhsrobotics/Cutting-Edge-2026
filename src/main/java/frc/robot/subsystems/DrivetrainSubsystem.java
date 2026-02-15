@@ -16,11 +16,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         double maximumSpeed = Units.feetToMeters(4.5);
         File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
         swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
-        //swerveDrive.useExternalFeedbackSensor();
     }
 
     public void Drive(ChassisSpeeds speed){
-        swerveDrive.drive(speed);
+        swerveDrive.driveFieldOriented(speed);
     }
 
 }

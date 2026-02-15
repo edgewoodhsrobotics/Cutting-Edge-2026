@@ -6,11 +6,13 @@ package frc.robot;
 
 import java.io.IOException;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.BackIntake;
 import frc.robot.commands.FrontIntake;
 import frc.robot.subsystems.BackIntakeSubsystem;
@@ -44,7 +46,14 @@ public class RobotContainer {
 
   private void configureBindings() {
   //Shooter 
-  controller.rightTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -0.3), new BackIntakeWheel(myBackIntakeWheelSubsystem, -0.6), new FrontIntake(myFrontIntakeSubsystem, 1)));
+  controller.rightTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new BackIntakeWheel(myBackIntakeWheelSubsystem, -0.6), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
+
+  //Reverse intake
+  controller.y().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, -0.8)));
+
+
+  //Fixer
+    controller.x().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 1), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0)));
 
   //Climber up
   controller.rightBumper().whileTrue(new Climber(myClimberSubsystem, 1));
@@ -53,11 +62,19 @@ public class RobotContainer {
   controller.leftBumper().whileTrue(new Climber(myClimberSubsystem, 1));
 
   //Intake
-  controller.leftTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.3), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0.6), new FrontIntake(myFrontIntakeSubsystem, 1)));
+  controller.leftTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
+
+  //Continuous intake
+   controller.a().toggleOnTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
+
+   //Continuous Shooter
+    controller.b().toggleOnTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new BackIntakeWheel(myBackIntakeWheelSubsystem, -0.6), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
 
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return new ParallelCommandGroup(new Drive(myDriveTrainSubsystem, () -> -0.2, () -> 0, () -> 0), new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -0.1), new BackIntakeWheel(myBackIntakeWheelSubsystem, -0.2), new FrontIntake(myFrontIntakeSubsystem, 0.5))) 
+    .withTimeout(2);
+  
   }
 }
