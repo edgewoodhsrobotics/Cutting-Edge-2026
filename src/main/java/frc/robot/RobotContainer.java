@@ -17,6 +17,10 @@ import frc.robot.subsystems.BackIntakeSubsystem;
 import frc.robot.commands.Drive;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.FrontIntakeSubsystem;
+import frc.robot.subsystems.BackIntakeWheelSubsystem;
+import frc.robot.commands.BackIntakeWheel;
+import frc.robot.commands.Climber;
+import frc.robot.subsystems.ClimberSubsystem;
 
 
 public class RobotContainer {
@@ -24,28 +28,33 @@ public class RobotContainer {
   private final CommandXboxController controller;
   private final FrontIntakeSubsystem myFrontIntakeSubsystem;
   private final BackIntakeSubsystem myBackIntakeSubsystem;
+  private final BackIntakeWheelSubsystem myBackIntakeWheelSubsystem;
+  private final ClimberSubsystem myClimberSubsystem;
 
   public RobotContainer() throws IOException{
     myDriveTrainSubsystem = new DrivetrainSubsystem();
     myFrontIntakeSubsystem = new FrontIntakeSubsystem();
     myBackIntakeSubsystem = new BackIntakeSubsystem();
-  controller = new CommandXboxController(0);
-   myDriveTrainSubsystem.setDefaultCommand(new Drive(myDriveTrainSubsystem, () -> -controller.getLeftY()*4, () -> -controller.getLeftX()*4, () -> -controller.getRightX()*2*Math.PI));
+    myBackIntakeWheelSubsystem = new BackIntakeWheelSubsystem();
+    myClimberSubsystem = new ClimberSubsystem();
+    controller = new CommandXboxController(0);
+    myDriveTrainSubsystem.setDefaultCommand(new Drive(myDriveTrainSubsystem, () -> -controller.getLeftY()*4, () -> -controller.getLeftX()*4, () -> -controller.getRightX()*2*Math.PI));
     configureBindings();
   }
 
   private void configureBindings() {
-    //Shooter
-    controller.x().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -0.3), new FrontIntake(myFrontIntakeSubsystem, 1))); 
+  //Shooter 
+  controller.rightTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -0.3), new BackIntakeWheel(myBackIntakeWheelSubsystem, -0.6), new FrontIntake(myFrontIntakeSubsystem, 1)));
 
-    //outtake 
-    controller.a().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, .1), new FrontIntake(myFrontIntakeSubsystem, -1))); 
-   
-   //intake
-    controller.b().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.3), new FrontIntake(myFrontIntakeSubsystem, 1))); 
+  //Climber up
+  controller.rightBumper().whileTrue(new Climber(myClimberSubsystem, 1));
 
-   //unstick from hopper
-    controller.y().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -.1), new FrontIntake(myFrontIntakeSubsystem, 0)));
+  //Climber down 
+  controller.leftBumper().whileTrue(new Climber(myClimberSubsystem, 1));
+
+  //Intake
+  controller.leftTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.3), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0.6), new FrontIntake(myFrontIntakeSubsystem, 1)));
+
   }
 
   public Command getAutonomousCommand() {
