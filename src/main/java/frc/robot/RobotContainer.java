@@ -48,23 +48,20 @@ public class RobotContainer {
 
   private void configureBindings() {
   //Shooter 
-  //controller.rightTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0.6), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
-
-  //Reverse intake
-  controller.y().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, -0.8)));
+  controller.rightTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0.3), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
 
 
   //Fixer
     controller.x().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 1), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0)));
 
   //Climber up
-  controller.rightTrigger().whileTrue(new Climber(myClimberSubsystem, -1));
+  //controller.rightTrigger().whileTrue(new Climber(myClimberSubsystem, -1));
 
   //Climber down 
   controller.leftTrigger().whileTrue(new Climber(myClimberSubsystem, 1));
 
   //Intake
- // controller.leftTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
+ //controller.leftTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
 
   //Continuous intake
    controller.a().toggleOnTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
