@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.io.IOException;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -46,7 +48,7 @@ public class RobotContainer {
 
   private void configureBindings() {
   //Shooter 
-  controller.rightTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new BackIntakeWheel(myBackIntakeWheelSubsystem, -0.6), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
+  //controller.rightTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0.6), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
 
   //Reverse intake
   controller.y().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, -0.8)));
@@ -56,13 +58,13 @@ public class RobotContainer {
     controller.x().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 1), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0)));
 
   //Climber up
-  controller.rightBumper().whileTrue(new Climber(myClimberSubsystem, 1));
+  controller.rightTrigger().whileTrue(new Climber(myClimberSubsystem, -1));
 
   //Climber down 
-  controller.leftBumper().whileTrue(new Climber(myClimberSubsystem, 1));
+  controller.leftTrigger().whileTrue(new Climber(myClimberSubsystem, 1));
 
   //Intake
-  controller.leftTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
+ // controller.leftTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
 
   //Continuous intake
    controller.a().toggleOnTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
@@ -73,8 +75,12 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new ParallelCommandGroup(new Drive(myDriveTrainSubsystem, () -> -0.2, () -> 0, () -> 0), new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -0.1), new BackIntakeWheel(myBackIntakeWheelSubsystem, -0.2), new FrontIntake(myFrontIntakeSubsystem, 0.5))) 
-    .withTimeout(2);
+    //return new ParallelCommandGroup(new Drive(myDriveTrainSubsystem, () -> -0.2, () -> 0, () -> 0), new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -0.1), new BackIntakeWheel(myBackIntakeWheelSubsystem, -0.2), new FrontIntake(myFrontIntakeSubsystem, 0.5))) 
+    //.withTimeout(2);
   
+    return new PathPlannerAuto("Test");
   }
+
+
+
 }
