@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.BackIntake;
@@ -33,13 +35,15 @@ import frc.robot.commands.BackIntakeWheelRPM;
 
 public class RobotContainer {
   private final DrivetrainSubsystem myDriveTrainSubsystem;
-  private final CommandXboxController controller;
+  private final CommandXboxController controllerDrive;
+  private final CommandXboxController controllerShoot;
   private final FrontIntakeSubsystem myFrontIntakeSubsystem;
   private final BackIntakeSubsystem myBackIntakeSubsystem;
   private final BackIntakeWheelSubsystem myBackIntakeWheelSubsystem;
   private final ClimberSubsystem myClimberSubsystem;
   private final SendableChooser<Command> chooser = new SendableChooser<>();
 
+  
   public RobotContainer() throws IOException{
 
     myDriveTrainSubsystem = new DrivetrainSubsystem();
@@ -47,8 +51,9 @@ public class RobotContainer {
     myBackIntakeSubsystem = new BackIntakeSubsystem();
     myBackIntakeWheelSubsystem = new BackIntakeWheelSubsystem();
     myClimberSubsystem = new ClimberSubsystem();
-    controller = new CommandXboxController(0);
-    myDriveTrainSubsystem.setDefaultCommand(new Drive(myDriveTrainSubsystem, () -> -controller.getLeftY()*4, () -> -controller.getLeftX()*4, () -> -controller.getRightX()*2*Math.PI));
+    controllerDrive = new CommandXboxController(0);
+    controllerShoot = new CommandXboxController(1);
+    myDriveTrainSubsystem.setDefaultCommand(new Drive(myDriveTrainSubsystem, () -> -controllerDrive.getLeftY()*4, () -> -controllerDrive.getLeftX()*4, () -> -controllerDrive.getRightX()*2*Math.PI));
 
 
     NamedCommands.registerCommand("ClimberUp", new Climber(myClimberSubsystem, 1).withTimeout(1));
@@ -66,31 +71,49 @@ public class RobotContainer {
     chooser.addOption("Test", new PathPlannerAuto("Test"));
 
     SmartDashboard.putData("Auto Modes", chooser);
+    // SmartDashboard.putBoolean("Intake?", false);
+    // SmartDashboard.putBoolean("Shooter?", false);
 
     configureBindings();
   }
 
   private void configureBindings() {
   //Shooter 
-    controller.rightTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new FrontIntake(myFrontIntakeSubsystem, 0.5)));
-    controller.rightBumper().whileTrue(new BackIntakeWheelRPM(myBackIntakeWheelSubsystem, -4000));
+    controllerShoot.rightTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new FrontIntake(myFrontIntakeSubsystem, 0.5)));
+    controllerShoot.rightBumper().whileTrue(new BackIntakeWheelRPM(myBackIntakeWheelSubsystem, -4000));
 
 
     //Climber Up
-    controller.leftTrigger().whileTrue(new Climber(myClimberSubsystem, 0.5));
+    controllerShoot.leftTrigger().whileTrue(new Climber(myClimberSubsystem, 0.5));
 
     //Climber Down
-    controller.leftBumper().whileTrue(new Climber(myClimberSubsystem, -0.5));
+    controllerShoot.leftBumper().whileTrue(new Climber(myClimberSubsystem, -0.5));
 
 
   //Intake
-    controller.y().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
+    //controllerShoot.y().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
 
   //Continuous intake
-   controller.a().toggleOnTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
+   controllerShoot.a().toggleOnTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 0.8), new BackIntakeWheel(myBackIntakeWheelSubsystem, 0), new FrontIntake(myFrontIntakeSubsystem, 0.8)));
+  //controllerShoot.a().toggleOnTrue(new InstantCommand(()-> SmartDashboard.putBoolean("Intake?", !SmartDashboard.getBoolean("Intake?", false))));
 
    //Continuous Shooter
-    controller.b().toggleOnTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new FrontIntake(myFrontIntakeSubsystem, 0.5), new BackIntakeWheelRPM(myBackIntakeWheelSubsystem, -4000)));
+    // controllerShoot.b().toggleOnTrue(new ParallelCommandGroup(
+    //     new BackIntakeWheelRPM(myBackIntakeWheelSubsystem, -4000),
+    //     new WaitCommand(1).andThen(
+    //             new ParallelCommandGroup(new FrontIntake(myFrontIntakeSubsystem, 0.5), 
+    //             new BackIntake(myBackIntakeSubsystem, -1))
+    //     )));
+    //controllerShoot.b().toggleOnTrue(new InstantCommand(()-> SmartDashboard.putBoolean("Shooter?", !SmartDashboard.getBoolean("Shooter?", false))));
+
+    controllerShoot.b().whileTrue(new BackIntakeWheelRPM(myBackIntakeWheelSubsystem, -5000));
+
+    //Reset odometry
+    controllerDrive.x().onTrue(new InstantCommand(myDriveTrainSubsystem::resetOdometry));
+
+    //Unstick
+    controllerShoot.y().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, 1), new FrontIntake(myFrontIntakeSubsystem, -1), new BackIntakeWheelRPM(myBackIntakeWheelSubsystem, 4000)));
+    
 
   }
 

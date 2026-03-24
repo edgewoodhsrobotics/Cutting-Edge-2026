@@ -14,12 +14,15 @@ import edu.wpi.first.wpilibj.Filesystem;
 import swervelib.parser.SwerveParser;
 import swervelib.SwerveDrive;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.util.Units;
 
 public class DrivetrainSubsystem extends SubsystemBase {
     private SwerveDrive swerveDrive;
     private RobotConfig config;
+
     public DrivetrainSubsystem() throws IOException {
         double maximumSpeed = Units.feetToMeters(4.5);
         File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
@@ -64,6 +67,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
         swerveDrive.drive(speed);
     }
 
+    public void resetOdometry(){
+        Pose2d start = swerveDrive.getPose();
+        Pose2d end = new Pose2d(start.getTranslation(), Rotation2d.kZero);
+        swerveDrive.resetOdometry(end);
+    }
 
     public void Drive(ChassisSpeeds speed){
         swerveDrive.driveFieldOriented(speed);

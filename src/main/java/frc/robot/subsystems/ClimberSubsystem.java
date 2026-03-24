@@ -15,6 +15,8 @@ public class ClimberSubsystem extends SubsystemBase{
     public ClimberSubsystem(){
         SparkMaxConfig config = new SparkMaxConfig();
 
+        
+
         //config.softLimit.reverseSoftLimit(0).reverseSoftLimitEnabled(true);
         
         climberMotor = new SparkMax(17, MotorType.kBrushless);
