@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.BackIntake;
 import frc.robot.commands.FrontIntake;
+import frc.robot.commands.Shooter;
 import frc.robot.subsystems.BackIntakeSubsystem;
 import frc.robot.commands.Drive;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -79,9 +80,10 @@ public class RobotContainer {
 
   private void configureBindings() {
   //Shooter 
-    controllerShoot.rightTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new FrontIntake(myFrontIntakeSubsystem, 0.5)));
-    controllerShoot.rightBumper().whileTrue(new BackIntakeWheelRPM(myBackIntakeWheelSubsystem, -4000));
+    // controllerShoot.rightTrigger().whileTrue(new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new FrontIntake(myFrontIntakeSubsystem, 0.5)));
+    // controllerShoot.rightBumper().whileTrue(new BackIntakeWheelRPM(myBackIntakeWheelSubsystem, -4000));
 
+    controllerShoot.rightTrigger().whileTrue(new Shooter(myBackIntakeSubsystem, myFrontIntakeSubsystem, myBackIntakeWheelSubsystem));
 
     //Climber Up
     controllerShoot.leftTrigger().whileTrue(new Climber(myClimberSubsystem, 0.5));
