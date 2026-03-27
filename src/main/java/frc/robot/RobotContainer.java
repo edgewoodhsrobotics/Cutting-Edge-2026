@@ -29,8 +29,6 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.FrontIntakeSubsystem;
 import frc.robot.subsystems.BackIntakeWheelSubsystem;
 import frc.robot.commands.BackIntakeWheel;
-import frc.robot.commands.Climber;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.BackIntakeWheelRPM;
 
 
@@ -41,7 +39,6 @@ public class RobotContainer {
   private final FrontIntakeSubsystem myFrontIntakeSubsystem;
   private final BackIntakeSubsystem myBackIntakeSubsystem;
   private final BackIntakeWheelSubsystem myBackIntakeWheelSubsystem;
-  private final ClimberSubsystem myClimberSubsystem;
   private final SendableChooser<Command> chooser = new SendableChooser<>();
 
   
@@ -51,14 +48,11 @@ public class RobotContainer {
     myFrontIntakeSubsystem = new FrontIntakeSubsystem();
     myBackIntakeSubsystem = new BackIntakeSubsystem();
     myBackIntakeWheelSubsystem = new BackIntakeWheelSubsystem();
-    myClimberSubsystem = new ClimberSubsystem();
     controllerDrive = new CommandXboxController(0);
     controllerShoot = new CommandXboxController(1);
     myDriveTrainSubsystem.setDefaultCommand(new Drive(myDriveTrainSubsystem, () -> -controllerDrive.getLeftY()*4, () -> -controllerDrive.getLeftX()*4, () -> -controllerDrive.getRightX()*2*Math.PI));
 
 
-    NamedCommands.registerCommand("ClimberUp", new Climber(myClimberSubsystem, 1).withTimeout(1));
-    NamedCommands.registerCommand("ClimberDown", new Climber(myClimberSubsystem, -1));
     NamedCommands.registerCommand("Shooter", new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new FrontIntake(myFrontIntakeSubsystem, 0.5), new BackIntakeWheelRPM(myBackIntakeWheelSubsystem, -4000)).withTimeout(5));
     NamedCommands.registerCommand("Flywheel", new BackIntakeWheelRPM( myBackIntakeWheelSubsystem, -4000));
     NamedCommands.registerCommand("Kicker", new ParallelCommandGroup(new BackIntake(myBackIntakeSubsystem, -1), new FrontIntake(myFrontIntakeSubsystem, 0.5)));
@@ -85,11 +79,6 @@ public class RobotContainer {
 
     controllerShoot.rightTrigger().whileTrue(new Shooter(myBackIntakeSubsystem, myFrontIntakeSubsystem, myBackIntakeWheelSubsystem));
 
-    //Climber Up
-    controllerShoot.leftTrigger().whileTrue(new Climber(myClimberSubsystem, 0.5));
-
-    //Climber Down
-    controllerShoot.leftBumper().whileTrue(new Climber(myClimberSubsystem, -0.5));
 
 
   //Intake

@@ -16,13 +16,13 @@ public class Shooter extends Command{
         this.backIntakeSubsystem = backIntakeSubsystem;
         this.backIntakeWheelSubsystem = backIntakeWheelSubsystem;
         this.frontIntakeSubsystem = frontIntakeSubsystem;
-        flywheelTargetSpeed = 2000*.95;
+        flywheelTargetSpeed = 4000*.95;
 
         addRequirements(backIntakeSubsystem, backIntakeWheelSubsystem, frontIntakeSubsystem);
     }
 
     public void execute(){
-        backIntakeWheelSubsystem.BackIntakeWheelRPM(-flywheelTargetSpeed);
+        backIntakeWheelSubsystem.BackIntakeWheelRPM(-4000);
         if(Math.abs(backIntakeWheelSubsystem.getEncoder()) > flywheelTargetSpeed){
            backIntakeSubsystem.BackIntake(-1);
            frontIntakeSubsystem.FrontIntake(1);
